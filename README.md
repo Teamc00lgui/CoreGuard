@@ -2,6 +2,10 @@
 
 Makes your exploit GUI secure. CoreGuard is a project made by **x_c00lkidd_x**.
 
+## Version
+
+`0.1.0` is the newer version.
+
 ## How to use?
 
 To use CoreGuard in your project, you need:
