@@ -28,3 +28,7 @@ CoreGuard:Monitor(ScreenGui)
 CoreGuard automatically attempts to use `CoreGui` first.
 
 If `CoreGui` is unavailable, CoreGuard automatically falls back to `PlayerGui`.
+
+## x_c00lkidd_x projects that use CoreGuard
+
+- 007n7's hub
