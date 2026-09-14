@@ -1,5 +1,7 @@
 # CoreGuard
-Makes your exploit GUI secure. CoreGui is a project made by **x_c00lkidd_x**.
+Makes your exploit GUI secure.
+
+CoreGuard is a project made by x_c00lkidd_x.
 
 ## How to use?
 To use CoreGuard in your project, you need:
