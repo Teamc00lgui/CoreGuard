@@ -16,7 +16,7 @@ You can load the latest pinned release directly from GitHub:
 
 ```lua
 local CoreGuardSource = game:HttpGet(
-    "https://raw.githubusercontent.com/Teamc00lgui/CoreGuard/v0.1.1/CoreGuard.luau"
+    "https://raw.githubusercontent.com/Teamc00lgui/CoreGuard/(Version)/CoreGuard.luau"
 )
 
 local CoreGuard = loadstring(CoreGuardSource)()
@@ -43,7 +43,7 @@ CoreGuard can also be integrated directly into your script.
 local CoreGuard = {}
 
 CoreGuard.Name = "CoreGuard"
-CoreGuard.Version = "0.1.1"
+CoreGuard.Version = "(Version)"
 
 -- CoreGuard implementation
 
