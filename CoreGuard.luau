@@ -5,7 +5,7 @@ local RunService = game:GetService("RunService")
 local CoreGuard = {}
 
 CoreGuard.Name = "CoreGuard"
-CoreGuard.Version = "0.1.0"
+CoreGuard.Version = "0.1.1"
 
 CoreGuard.Container = nil
 CoreGuard.UsingCoreGui = false
@@ -518,3 +518,5 @@ function CoreGuard:Shutdown()
 
     self.State = "Uninitialized"
 end
+
+return CoreGuard
