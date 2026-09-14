@@ -1,11 +1,11 @@
-local Players = game:GetService("Players")
-local CoreGui = game:GetService("CoreGui")
-local RunService = game:GetService("RunService")
-
 local CoreGuard = {}
 
 CoreGuard.Name = "CoreGuard"
 CoreGuard.Version = "0.1.1"
+
+CoreGuard.Players = nil
+CoreGuard.CoreGui = nil
+CoreGuard.RunService = nil
 
 CoreGuard.Container = nil
 CoreGuard.UsingCoreGui = false
@@ -41,6 +41,39 @@ function CoreGuard:SetLogging(Enabled)
     self.Logging = Enabled == true
 end
 
+function CoreGuard:Init(Services)
+    if self.Initialized then
+        self:Log("Initialization request ignored because CoreGuard is already initialized.")
+        return true
+    end
+
+    if type(Services) ~= "table" then
+        self.LastError = "Services table is required."
+        self.State = "Failed"
+        self:Log("Initialization failed: Services table is required.")
+        return false
+    end
+
+    self.Players = Services.Players
+    self.CoreGui = Services.CoreGui
+    self.RunService = Services.RunService
+
+    if not self.Players or not self.CoreGui or not self.RunService then
+        self.LastError = "Players, CoreGui and RunService are required."
+        self.State = "Failed"
+        self:Log("Initialization failed: required services are missing.")
+        return false
+    end
+
+    self.State = "Ready"
+
+    self.LastError = nil
+
+    self:Log("CoreGuard initialized successfully.")
+
+    return true
+end
+
 function CoreGuard:IsAccessible(Object)
     if not Object then
         return false
@@ -58,7 +91,11 @@ function CoreGuard:ResolvePlayerGui()
         return self.PlayerGui
     end
 
-    local Player = Players.LocalPlayer
+    if not self.Players then
+        return nil
+    end
+
+    local Player = self.Players.LocalPlayer
 
     if not Player then
         return nil
@@ -101,7 +138,7 @@ function CoreGuard:IsMounted(ScreenGui)
 end
 
 function CoreGuard:CanUseCoreGui()
-    return self:IsAccessible(CoreGui)
+    return self:IsAccessible(self.CoreGui)
 end
 
 function CoreGuard:FindExisting(Container)
@@ -181,12 +218,12 @@ function CoreGuard:MountToCoreGui(ScreenGui)
         return false
     end
 
-    if not self:PrepareContainer(CoreGui, ScreenGui) then
+    if not self:PrepareContainer(self.CoreGui, ScreenGui) then
         return false
     end
 
     local Success = pcall(function()
-        ScreenGui.Parent = CoreGui
+        ScreenGui.Parent = self.CoreGui
     end)
 
     if not Success then
@@ -197,11 +234,11 @@ function CoreGuard:MountToCoreGui(ScreenGui)
         return ScreenGui.Parent
     end)
 
-    if not ParentSuccess or Parent ~= CoreGui then
+    if not ParentSuccess or Parent ~= self.CoreGui then
         return false
     end
 
-    self.Container = CoreGui
+    self.Container = self.CoreGui
     self.UsingCoreGui = true
     self.State = "CoreGui"
 
@@ -243,8 +280,15 @@ function CoreGuard:MountToPlayerGui(ScreenGui)
 end
 
 function CoreGuard:Mount(ScreenGui)
-    if self.Initialized then
-        self:Log("Mount request ignored because CoreGuard is already initialized.")
+    if not self.Players or not self.CoreGui or not self.RunService then
+        self.LastError = "CoreGuard is not initialized."
+        self.State = "Failed"
+        self:Log("Mount failed: CoreGuard is not initialized.")
+        return false
+    end
+
+    if self.Initialized and self.ScreenGui then
+        self:Log("Mount request ignored because CoreGuard is already mounted.")
         return self:IsMounted(ScreenGui)
     end
 
@@ -357,13 +401,13 @@ function CoreGuard:CheckDuplicates()
 
     local Removed = 0
 
-    if self:IsAccessible(CoreGui) then
-        Removed += self:RemoveDuplicates(CoreGui, self.ScreenGui)
+    if self:IsAccessible(self.CoreGui) then
+        Removed += self:RemoveDuplicates(self.CoreGui, self.ScreenGui)
     end
 
     local PlayerGui = self:ResolvePlayerGui()
 
-    if PlayerGui and PlayerGui ~= CoreGui then
+    if PlayerGui and PlayerGui ~= self.CoreGui then
         Removed += self:RemoveDuplicates(PlayerGui, self.ScreenGui)
     end
 
@@ -372,6 +416,12 @@ end
 
 function CoreGuard:Monitor(ScreenGui)
     ScreenGui = ScreenGui or self.ScreenGui
+
+    if not self.RunService then
+        self.LastError = "CoreGuard is not initialized."
+        self:Log("Monitor failed: CoreGuard is not initialized.")
+        return false
+    end
 
     if not ScreenGui then
         self.LastError = "ScreenGui is required."
@@ -404,7 +454,7 @@ function CoreGuard:Monitor(ScreenGui)
         self.HeartbeatConnection = nil
     end
 
-    self.HeartbeatConnection = RunService.Heartbeat:Connect(function()
+    self.HeartbeatConnection = self.RunService.Heartbeat:Connect(function()
         if self.Recovering or not self.Initialized then
             return
         end
@@ -507,6 +557,10 @@ function CoreGuard:Shutdown()
     self.Initialized = false
     self.Recovering = false
     self.Monitoring = false
+
+    self.Players = nil
+    self.CoreGui = nil
+    self.RunService = nil
 
     self.LastWarning = nil
     self.LastError = nil
