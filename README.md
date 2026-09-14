@@ -91,4 +91,4 @@ Stops CoreGuard and disconnects its active monitoring connections.
 
 ## Repository
 
-CoreGuard is maintained separately so it can be reused across multiple x_c00lkidd_x projects.
+CoreGuard is maintained separately so it can be reused across multiple projects.
