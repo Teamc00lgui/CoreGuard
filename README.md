@@ -12,7 +12,7 @@ CoreGuard can be used in two ways:
 
 ### Remote library
 
-You can load the latest pinned release directly from GitHub:
+You can load a specific CoreGuard release directly from GitHub:
 
 ```lua
 local CoreGuardSource = game:HttpGet(
@@ -31,9 +31,17 @@ CoreGuard:Mount(ScreenGui)
 CoreGuard:Monitor(ScreenGui)
 ```
 
+Replace `(Version)` with the CoreGuard release you want to use.
+
+For example:
+
+```text
+https://raw.githubusercontent.com/Teamc00lgui/CoreGuard/v0.1.1/CoreGuard.luau
+```
+
 Your project must provide the required services through `CoreGuard:Init()` and create its own `ScreenGui`.
 
-The release tag in the URL keeps the project pinned to a specific CoreGuard version.
+Using a release tag in the URL keeps your project pinned to a specific CoreGuard version.
 
 ### Integrated library
 
@@ -44,6 +52,10 @@ local CoreGuard = {}
 
 CoreGuard.Name = "CoreGuard"
 CoreGuard.Version = "(Version)"
+
+CoreGuard.Players = nil
+CoreGuard.CoreGui = nil
+CoreGuard.RunService = nil
 
 -- CoreGuard implementation
 
@@ -56,6 +68,8 @@ CoreGuard:Init({
 CoreGuard:Mount(ScreenGui)
 CoreGuard:Monitor(ScreenGui)
 ```
+
+Replace `(Version)` with the version of the CoreGuard implementation you integrated.
 
 When integrated, the CoreGuard implementation becomes part of your project and does not need to be downloaded at runtime.
 
