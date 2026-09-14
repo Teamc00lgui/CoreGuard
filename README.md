@@ -1,6 +1,6 @@
 # CoreGuard
 
-Makes your exploit GUI secure. CoreGuard is a project full Open Source made by **x_c00lkidd_x**.
+CoreGuard makes your exploit GUI secure. CoreGuard is a fully open-source project made by **x_c00lkidd_x**.
 
 ## Version
 
