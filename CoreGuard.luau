@@ -5,7 +5,7 @@ local RunService = game:GetService("RunService")
 local CoreGuard = {}
 
 CoreGuard.Name = "CoreGuard"
-CoreGuard.Version = "01.0"
+CoreGuard.Version = "0.1.0"
 
 CoreGuard.Container = nil
 CoreGuard.UsingCoreGui = false
